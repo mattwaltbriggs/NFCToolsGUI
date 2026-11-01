@@ -97,12 +97,14 @@ final class AppModel: ObservableObject {
         let names = (try? fileManager.contentsOfDirectory(atPath: "/dev")) ?? []
         var candidates = Set<String>()
 
-        for name in names where name.hasPrefix("tty.") {
+        // libnfc cannot open the tty.* dial-in node for USB serial adapters
+        // (it reports "Invalid serial port"), so prefer the cu.* call-out node.
+        for name in names where name.hasPrefix("cu.") {
             candidates.insert(name)
         }
-        for name in names where name.hasPrefix("cu.") {
-            let suffix = String(name.dropFirst(3))
-            if !candidates.contains("tty." + suffix) {
+        for name in names where name.hasPrefix("tty.") {
+            let suffix = String(name.dropFirst(4))
+            if !candidates.contains("cu." + suffix) {
                 candidates.insert(name)
             }
         }
