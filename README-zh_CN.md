@@ -53,14 +53,16 @@
 #### macOS
 1. 安装依赖
     ```bash
-    brew install autoconf automake libtool pkg-config
+    brew install autoconf automake libtool pkg-config xz
     ```
 2. 进入此项目目录并执行如下命令
     ```bash
     sh ./compile.sh
     ```
+    > 在 Apple Silicon 上，核心组件（包括 libusb）会原生编译为 arm64 版本。
+    > 之前使用的 macOS 预编译 libusb 仅支持 x86_64，无法在 Apple Silicon 上使用。
 ### 编译 GUI
-1. 安装 [Node.js](https://nodejs.org/)
+1. 安装 [Node.js](https://nodejs.org/)（推荐使用 Node.js 20 或 22；此版本使用的打包工具不兼容 Node.js 26+）
 2. 进入此项目目录并执行如下命令
     ```bash
     npm install

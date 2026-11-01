@@ -36,6 +36,14 @@ if [ "$os" = "MINGW64" ]; then
     pacman -S --noconfirm mingw-w64-x86_64-headers-git
 fi
 
+if [ "$os" = "Darwin" ]; then
+    if command -v brew >/dev/null 2>&1; then
+        brew_prefix=$(brew --prefix)
+    else
+        brew_prefix=/usr/local
+    fi
+fi
+
 workdir=$(pwd)
 prefix=$workdir/framework
 source=$workdir/source
@@ -56,11 +64,18 @@ if [ "$os" = "MINGW64" ]; then
     cp -a ./include "$prefix"
     cp -a ./lib "$prefix"
 elif [ "$os" = "Darwin" ]; then
-    mkdir -p ./libusb
-    cd ./libusb
-    curl -LO https://pub-3d2f9df4304d45e38bbebe723816c4a3.r2.dev/libusb-legacy-0.1.12_4.darwin_22.x86_64.tbz2
-    tar -xvf libusb-legacy-0.1.12_4.darwin_22.x86_64.tbz2
-    mv ./opt/local/* "$prefix"/
+    # Build libusb 0.1.x from source so the resulting binaries match the host
+    # architecture (the prebuilt package is x86_64 only and cannot be used on
+    # Apple Silicon).
+    curl -LO https://pub-3d2f9df4304d45e38bbebe723816c4a3.r2.dev/libusb-0.1.12.zip
+    unzip -o libusb-0.1.12.zip
+    cd ./libusb-0.1.12
+    # The bundled config.sub predates Apple Silicon support.
+    automake_libdir=$(automake --print-libdir)
+    cp "$automake_libdir/config.sub" "$automake_libdir/config.guess" .
+    ./configure prefix="$prefix" CFLAGS='-O2 -Wno-error -Wno-deprecated-declarations -Wno-format -Wno-format-extra-args'
+    make && make install
+    cd "$source"
 else
     curl -LO https://pub-3d2f9df4304d45e38bbebe723816c4a3.r2.dev/libusb-0.1.12.zip
     unzip -o libusb-0.1.12.zip
@@ -173,7 +188,7 @@ echo
 echo "============================== cropto1_bs =============================="
 cd "$source"/cropto1_bs
 autoreconf -vis
-./configure prefix="$prefix" CFLAGS=-I/opt/local/include' '-I"$prefix"/include LDFLAGS=-L"$prefix"/lib
+./configure prefix="$prefix" CFLAGS=-I/opt/local/include' '-I"$brew_prefix"/include' '-I"$prefix"/include LDFLAGS=-L"$prefix"/lib
 make && make install
 
 

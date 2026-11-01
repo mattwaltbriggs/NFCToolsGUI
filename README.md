@@ -53,14 +53,17 @@ Usually, the Linux kernel already includes the driver for CH341, so there is no 
 #### macOS
 1. Install dependencies:
     ```bash
-    brew install autoconf automake libtool pkg-config
+    brew install autoconf automake libtool pkg-config xz
     ```
 2. Enter the project directory and execute the following command:
     ```bash
     sh ./compile.sh
     ```
+    > On Apple Silicon the core components (including libusb) are built natively for arm64.
+    > The prebuilt libusb package previously used on macOS was x86_64 only and cannot be used on Apple Silicon.
 ### Compile GUI
-1. Install [Node.js](https://nodejs.org/)
+1. Install [Node.js](https://nodejs.org/) (Node.js 20 or 22 is recommended; the packaging
+   tooling used by this version is not compatible with Node.js 26+)
 2. Enter the project directory and execute the following command:
     ```bash
     npm install

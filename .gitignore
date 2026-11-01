@@ -87,6 +87,12 @@ typings/
 
 # Electron-Forge
 out/
+framework/
+src/buildInfo.json
+
+# Build downloads
+source/libusb*
+source/__MACOSX/
 
 # Running Data
 dumpfiles/
