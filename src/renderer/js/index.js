@@ -19,7 +19,7 @@ if (mainProcess.platform !== "darwin") {
 
 mainProcess.getVersion().then((v) =>{$("#version-value").html(v)})
 
-// 接收更新 Log 输出
+// Receive log output updates
 mainProcess.onUpdateLogOutput((_event, value) => {
     const textarea = document.getElementById("log")
     if (value.indexOf("\33[2K") >= 0) {
@@ -33,7 +33,7 @@ mainProcess.onUpdateLogOutput((_event, value) => {
     }
 })
 
-// 接收状态更新
+// Receive status updates
 mainProcess.onUpdateStatus((_event, value) => {
     $statusText.html(value["text"])
     $statusText.prop("title", value["text"])
@@ -66,7 +66,7 @@ mainProcess.onUpdateStatus((_event, value) => {
     }
 })
 
-// 接收更新 USB 设列表
+// Receive USB device list updates
 mainProcess.onUpdateUSBDevices((_event, value) => {
     if (isListEqual(value, currentUSBPorts)) return
     currentUSBPorts = value
@@ -87,7 +87,7 @@ mainProcess.onUpdateUSBDevices((_event, value) => {
     })
 })
 
-// 更新配置时, 禁止选择设备
+// Disallow device selection while the configuration is being updated
 mainProcess.onSettingNFCConfig((_event, value) => {
     if (value === "start") {
         isConnectingDevice = true
@@ -102,10 +102,10 @@ mainProcess.onSettingNFCConfig((_event, value) => {
 })
 
 
-// 显示选择设备下拉列表
+// Show the device selection dropdown
 function showDropdown(obj, e, action){
-    e.stopPropagation(); //阻止冒泡
-    //阻止默认浏览器动作(W3C)
+    e.stopPropagation(); // stop event bubbling
+    // prevent the default browser action (W3C)
     if ( e && e.preventDefault ){
         e.preventDefault();
     } else{
@@ -121,11 +121,11 @@ function showDropdown(obj, e, action){
     }
 }
 
-// 选择下拉列表设备
+// Select a device from the dropdown
 function selectedValue(obj, e){
-    e.stopPropagation(); //阻止冒泡
+    e.stopPropagation(); // stop event bubbling
     let selectedDom;
-    // 点击的地方可能是li，也可能是li的子节点
+    // The click may land on the li element or on one of its child nodes
     if(e.target && e.target.nodeName === "LI"){
         selectedDom = e.target;
     }else{
@@ -144,14 +144,14 @@ function selectedValue(obj, e){
     mainProcess.execAction('conn-usb-devices', selectedValue)
 }
 
-// 点击其他位置关闭下拉列表
+// Close the dropdown when clicking elsewhere
 document.addEventListener("click", () => {
     if ($(".dropdown-menus").is(":visible")) {
         $('.dropdown-menus').hide();
     }
 });
 
-// 重置状态
+// Reset status
 function resetStatus(fromMain=false) {
     if (isTimerRunning || fromMain) {
         clearInterval(intervalID)

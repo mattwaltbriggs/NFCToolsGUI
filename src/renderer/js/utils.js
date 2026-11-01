@@ -1,4 +1,4 @@
-// 比较两个 List
+// Compare two lists
 function isListEqual(a, b) {
     if (a.length !== b.length) {
         return false

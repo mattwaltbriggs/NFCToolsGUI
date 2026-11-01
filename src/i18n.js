@@ -18,13 +18,13 @@ function init() {
 function getLanguage() {
     const userLanguage = app.getLocale();
     const [languageCode] = userLanguage.split('-');
-    const supportedLanguages = ['en', 'zh-CN']; // 支持的语言列表
+    const supportedLanguages = ['en', 'zh-CN']; // supported language list
     if (supportedLanguages.includes(languageCode)) {
         return languageCode;
     } else if (supportedLanguages.includes(userLanguage)) {
         return userLanguage;
     }
-    return 'en'; // 如果用户的语言不在支持列表中，则默认使用英语
+    return 'en'; // fall back to English when the user's language is not supported
 }
 
 function getText(key) {

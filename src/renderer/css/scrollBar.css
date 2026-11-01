@@ -1,4 +1,4 @@
-/* 正常模式下的样式 */
+/* Styles for light mode */
 ::-webkit-scrollbar {
     width: 8px;
     height: 10px;
@@ -32,7 +32,7 @@
     display: none;
 }
 
-/* 深色模式下的样式 */
+/* Styles for dark mode */
 @media (prefers-color-scheme: dark) {
     ::-webkit-scrollbar {
         background-color: #333333;

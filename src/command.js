@@ -59,10 +59,10 @@ const defaultKeys = [
 ]
 
 const actions = {
-    // 打开设置窗口
+    // Open the settings window
     "open-settings-window": createSettingsWindow,
 
-    // 扫描设备
+    // Scan devices
     "scan-usb-devices": () => {
         SerialPort.list().then(ports => {
             const devices = []
@@ -73,7 +73,7 @@ const actions = {
         });
     },
 
-    // 连接设备
+    // Connect to device
     "conn-usb-devices": (device) => {
         if (device === " ") {status.currentDevice = null; return}
         printStatus(i18n("indicator_connecting_device"))
@@ -81,20 +81,20 @@ const actions = {
         setNFCConfig()
     },
 
-    // 速度设置
+    // Speed setting
     // "set-speed": (speed) => {
-    //     if (status.currentDevice === null) {dialog.showErrorBox("错误", "请先选择设备"); return}
+    //     if (status.currentDevice === null) {dialog.showErrorBox("Error", "Please select a device first"); return}
     //     status.currentSpeed = speed
     //     setNFCConfig()
     // },
 
-    // 一键解卡
+    // One-click card read
     "read-IC": () => {
         printStatus(i18n("indicator_reading_ic_card"))
         mfoc([`-O${tempMFDFilePath}`, `-f${knownKeysFile}`])
     },
 
-    // 一键写卡
+    // One-click card write
     "write-IC": () => {
         dialog.showOpenDialog({
             title: i18n("dialog_title_choose_dump_need_to_write"),
@@ -112,7 +112,7 @@ const actions = {
         })
     },
 
-    // 格式化
+    // Format
     "format-card": () => {
         readICThenExec(
             i18n("log_msg_start_format_card"), i18n("indicator_formatting_ic_card"), true,
@@ -120,7 +120,7 @@ const actions = {
         )
     },
 
-    // 输入已知密钥解卡
+    // Read card with known keys
     "input-keys-read-IC": () => {createInputKeysWindow("done-input-keys-read-IC")},
     "done-input-keys-read-IC": (keys) => {
         const keyArg = []
@@ -131,7 +131,7 @@ const actions = {
         mfoc(keyArg.concat([`-O${tempMFDFilePath}`, `-f${knownKeysFile}`]))
     },
 
-    // 检测卡片类型
+    // Detect card type
     "detect-card-type": () => {
         checkKeyFileExist()
         knownKeyInfo = []
@@ -144,7 +144,7 @@ const actions = {
         ).then(()=>{printExitLog(0)}).catch(() => {})
     },
 
-    // 锁 UFUID
+    // Lock UFUID
     "lock-ufuid": () => {
         dialog.showMessageBox({
             type: "warning",
@@ -159,7 +159,7 @@ const actions = {
         })
     },
 
-    // HardNested 解密
+    // HardNested decryption
     "hard-nested": () => {
         try {createHardNestedWindow({
             knownKey: knownKeyInfo[0][0],
@@ -284,7 +284,7 @@ const actions = {
             }).catch(() => {})
     },
 
-    //打开字典文件
+    // Open dictionary file
     "open-dict-file": () => {
         const url = dialog.showOpenDialogSync({
             title: i18n("dialog_title_choose_dictionary_file"),
@@ -299,7 +299,7 @@ const actions = {
             sentToDictTestWindow("dict-file-name", pathArray[pathArray.length - 1])
         }
     },
-    // 字典测试
+    // Dictionary test
     "dict-test": () => {
         try {
             createDictTestWindow({
@@ -326,10 +326,10 @@ const actions = {
         ).then(()=>{printExitLog(0)}).catch(() => {})
     },
 
-    // 打开历史密钥
+    // Open historical keys
     "open-history-keys": () => {cp.exec(`${process.platform === "win32" ? "notepad.exe" : "open"} "${knownKeysFile}"`)},
 
-    // 转储编辑器
+    // Dump editor
     "open-dump-editor": (file) => {
         createDumpEditorWindow(file ? path.join(dumpsFolder, file) : null)
     },
@@ -365,7 +365,7 @@ const actions = {
         });
     },
 
-    // 转储比较器
+    // Dump comparator
     "open-dump-comparator": (dumpFilesData) => {
         // dumpFilesData = {A: "dump1.mfd", B: "dump2.mfd"}
         if (dumpFilesData) {
@@ -396,16 +396,16 @@ const actions = {
         });
     },
 
-    // 历史记录
+    // Dump history
     "dump-history": () => {
         fs.mkdir(dumpsFolder, () => {
             const dumpFiles = fs.readdirSync(dumpsFolder).filter(file => file.endsWith('.mfd'));
             createDumpHistoryWindow(dumpFiles)
         });
     },
-    // 删除历史记录
+    // Delete dump history entries
     "delete-dump": (files) => {
-        // 弹出确认框
+        // Show confirmation dialog
         const confirmDelete = dialog.showMessageBoxSync({
             type: 'question',
             buttons: [i18n("dialog_button_ok"), i18n("dialog_button_cancel")],
@@ -413,7 +413,7 @@ const actions = {
             detail: files.join('\n'),
         });
 
-        if (confirmDelete === 0) { // 用户点击 Yes
+        if (confirmDelete === 0) { // User clicked Yes
             files.forEach((file) => {
                 fs.unlink(path.join(dumpsFolder, file), (err) => {
                     if (err) throw err;
@@ -422,7 +422,7 @@ const actions = {
             });
         }
     },
-    // 重命名
+    // Rename
     "rename-dump-file": (fileObj) => {
         const { oldName, newName } = fileObj;
         fs.rename(path.join(dumpsFolder, oldName), path.join(dumpsFolder, newName), (err) => {
@@ -431,12 +431,12 @@ const actions = {
         });
     },
 
-    // 取消任务
+    // Cancel task
     "cancel-task": () => {
         killProcess()
     },
 
-    // 保存日志
+    // Save log
     "save-log": (content) => {
         const url = dialog.showSaveDialogSync({
             title: i18n("dialog_title_save_to"),
@@ -464,7 +464,7 @@ const actions = {
     // about page
     "open-about": createAboutWindow,
 
-    // 检查更新
+    // Check for updates
     "check-update": (isShowErrorDialog=false) => {
         const repoAuthor = 'GSWXXN';
         const repoName = 'NFCToolsGUI';
@@ -513,7 +513,7 @@ const actions = {
     }
 }
 
-// 保存密钥
+// Save keys
 function saveKeys(keys) {
     const knownKeys = fs.readFileSync(knownKeysFile).toString().match(/[0-9A-Fa-f]{12}/g)
     keys = Array.from(new Set(knownKeys ? knownKeys.concat(keys) : keys))
@@ -524,7 +524,7 @@ function saveKeys(keys) {
     fs.writeFileSync(knownKeysFile, `${keys.join("\n")}`)
 }
 
-// 先读卡，然后进行后续操作
+// Read the card first, then perform follow-up operations
 function readICThenExec(msg, statusMsg, isSaveDumpFile, cmd, args, processHandler, finishHandler) {
     let isCmdFunc = true
     if (arguments.length === 4) isCmdFunc = false
@@ -558,7 +558,7 @@ function readICThenExec(msg, statusMsg, isSaveDumpFile, cmd, args, processHandle
         }).catch(() => {})
 }
 
-// 执行MFOC解密
+// Run MFOC decryption
 function mfoc(args) {
     let cardID = null
     newKeys = []
@@ -595,7 +595,7 @@ function mfoc(args) {
     ).then(()=>{printExitLog(0)}).catch(() => {})
 }
 
-// 统计密钥信息
+// Collect key information
 function keyInfoStatistic(content) {
 
     //match [ Unknown Key A] or [ Found   Key B: ffffffffffff]
@@ -614,12 +614,12 @@ function keyInfoStatistic(content) {
     })
 }
 
-// 检查密钥文件是否存在
+// Check whether the key file exists
 function checkKeyFileExist() {
     if (!fs.existsSync(knownKeysFile)) fs.writeFileSync(knownKeysFile, "")
 }
 
-// 配置 libnfc.conf
+// Configure libnfc.conf
 function setNFCConfig() {
     sendToMainWindow("setting-nfc-config", "start")
     const content = `device.name = "NFC_Device"\ndevice.connstring = "pn532_uart:${status.currentDevice}:${status.currentSpeed}"`

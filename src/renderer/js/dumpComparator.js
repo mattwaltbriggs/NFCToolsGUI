@@ -91,11 +91,11 @@ function markDifferentStrings(dumpA, dumpB, subArrLength, strLength) {
 function showMarkedDump(dumpA, dumpB, subArrLength, strLength) {
     const [markedDumpA, markedDumpB] = markDifferentStrings(dumpA, dumpB, subArrLength, strLength);
 
-    // 获取页面中的容器元素
+    // Get the container element on the page
     const container = $("#compare-container");
     container.empty()
 
-    // 遍历 dumpA 和 dumpB 的子数组，生成包含标记的字符串，将它们插入到页面上
+    // Iterate over the sub-arrays of dumpA and dumpB, build the marked strings, and insert them into the page
     let sector = 0
     markedDumpA.forEach((subArrA, index) => {
         container.append($("<div>").html(`${i18n("html_sector")} ${sector++}`).addClass('sector-tag'))

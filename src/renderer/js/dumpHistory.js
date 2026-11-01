@@ -16,18 +16,18 @@ window["electronAPI"].onCreateDumpHistoryWindow((_event, dumps) => {
             }
         });
 
-        // 删除按钮
+        // Delete button
         const delIMG = $('<img>').attr('src', '../assets/icon/svg/del.svg').addClass("dump-action-button-img")
         const $deleteButton = $('<button>').addClass('dump-action-button').append(delIMG).click(function(event) {
             event.stopPropagation();
             window["electronAPI"].execAction('delete-dump', [dump]);
         }).hide();
 
-        // 重命名按钮
+        // Rename button
         const renameIMG = $('<img>').attr('src', '../assets/icon/svg/rename.svg').addClass("dump-action-button-img").addClass("invert-color-when-dark")
         const $renameButton = $('<button>').addClass('dump-action-button').append(renameIMG).click(function(event) {
             event.stopPropagation();
-            // 编辑框
+            // Edit box
             const $input = $('<input>').attr('type', 'text').addClass("dump-action-edit").val($fileName.text());
             $input.on('blur keydown', function(e) {
                 if (e.type === 'blur' || e.which === 13) {
@@ -48,12 +48,12 @@ window["electronAPI"].onCreateDumpHistoryWindow((_event, dumps) => {
             $input.focus();
         }).hide();
 
-        // 添加元素
+        // Append elements
         $dumpItem.append($renameButton);
         $dumpItem.append($deleteButton);
         $dumpsList.append($('<li>').append($dumpItem).append("<hr>").addClass('dump-item-wrapper'));
 
-        // 显示/隐藏按钮
+        // Show/hide buttons
         $dumpItem.hover(function() {
             if (isEditingFileName) return;
             $(this).find('.dump-action-button').show();
