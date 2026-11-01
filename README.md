@@ -16,6 +16,18 @@ English | [简体中文](https://github.com/GSWXXN/NFCToolsGUI/blob/main/README-
 * Dump editing
 * Dump comparison
 
+## Native macOS app (SwiftUI, offline)
+This fork includes a native SwiftUI app for Apple silicon Macs (macOS 13+, tested on macOS 27). It replaces the Electron/Chromium shell and has no update check and no network access.
+
+Build the bundled CLI tools first (see `compile.sh`), then:
+```sh
+./macos/build-app.sh
+open dist/NFCToolsGUI.app
+```
+The script produces `dist/NFCToolsGUI.app` and `dist/NFCToolsGUI-native-arm64-<version>.zip` with a SHA-256 file. The app is ad-hoc signed and not notarized. If Gatekeeper blocks the first launch, right-click the app and choose **Open**, or run `xattr -dr com.apple.quarantine NFCToolsGUI.app`.
+
+Existing data in `~/Library/Application Support/NFCToolsGUI` (keys, dumps) is used unchanged.
+
 ## Interface preview
 <img src="./doc/interface-en.png" alt="" width="600">
 

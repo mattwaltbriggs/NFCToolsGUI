@@ -99,3 +99,7 @@ dumpfiles/
 keys.txt
 *.mfd
 
+
+# Native macOS build output
+macos/.build/
+dist/
